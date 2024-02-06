@@ -1,6 +1,7 @@
 import uuid
 
 from django.contrib.auth.models import User
+from django.urls import reverse
 from rest_framework import serializers
 
 from api.models import File
@@ -27,4 +28,5 @@ class UploadedFileSerializer(serializers.ModelSerializer):
         read_only_fields = ('name', 'url', 'file_id')
 
     def get_url(self, obj):
-        return f'http:/127.0.0.1:8000/files/{obj.file_id}'
+        host = 'http://127.0.0.1:8000'
+        return f'{host}' + reverse('api:detail', args=(obj.id,))

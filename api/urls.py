@@ -13,5 +13,6 @@ urlpatterns = [
     # path('files/<file_id>/', FileEditDeleteView.as_view()),
     # path('', include(router.urls)),
     path('files/', FileViewSet.as_view({'get': 'list'})),
-    path('files/<int:pk>/', FileViewSet.as_view({'patch': 'update', 'get': 'retrieve', 'delete': 'destroy'}))
+    path('files/<int:pk>/', FileViewSet.as_view({'patch': 'update', 'get': 'retrieve', 'delete': 'destroy'}),
+         name='detail')
 ]
