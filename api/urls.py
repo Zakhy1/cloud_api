@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter, DefaultRouter
 
-from api.views import FileEditDeleteView, FileViewSet
+from api.views import FileViewSet
 
 app_name = 'api'
 

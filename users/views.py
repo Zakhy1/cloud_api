@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -31,10 +32,11 @@ class GetAuthToken(APIView):
 
     def post(self, request, *args, **kwargs):
         serializer = AuthTokenSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key})
+        raise AuthenticationFailed(code=403, detail='Login failed')
 
 
 class DeleteAuthToken(APIView):

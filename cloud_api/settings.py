@@ -137,17 +137,19 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',  # on release comment that line
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated'
+        'rest_framework.permissions.IsAuthenticated',
+        # 'cloud_api.permissions.CustomIsOwner',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'api.authentication.CustomTokenAuthentication',
     ],
+    'EXCEPTION_HANDLER': 'cloud_api.handlers.custom_exception_handler',
+    # 'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 }
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'users.User'
-
