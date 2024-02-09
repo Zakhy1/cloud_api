@@ -19,6 +19,21 @@ class UserSerializerCreate(serializers.ModelSerializer):
         return password
 
 
+class UserAccessSerializer(serializers.ModelSerializer):
+    fullname = serializers.SerializerMethodField()
+    type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('fullname', 'email', 'type')
+
+    def get_fullname(self, obj):
+        return f'{obj.first_name} {obj.last_name}'
+
+    def get_type(self, obj):
+        return 'co_author' if hasattr(obj, 'co_author') else 'author'
+
+
 class AuthTokenSerializer(serializers.Serializer):
     email = serializers.CharField(
         label=_("Email"),

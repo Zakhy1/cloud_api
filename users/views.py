@@ -23,7 +23,7 @@ class RegisterView(APIView):
                 'message': 'Success',
                 'token': token.key
             })
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'succes': False, 'message': serializer.errors}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 class GetAuthToken(APIView):
@@ -35,7 +35,9 @@ class GetAuthToken(APIView):
         if serializer.is_valid():
             user = serializer.validated_data['user']
             token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})
+            return Response({'success': True,
+                             'message': 'Success',
+                             'token': token.key})
         raise AuthenticationFailed(code=403, detail='Login failed')
 
 

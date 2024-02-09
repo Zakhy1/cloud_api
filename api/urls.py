@@ -1,18 +1,16 @@
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter, DefaultRouter
 
-from api.views import FileViewSet
+from api.views import FilesViewSet
 
 app_name = 'api'
 
-# router = DefaultRouter()
-# router.register(r'files', FileViewSet, basename='files')
-
-urlpatterns = [
-    # path('files/', FileViewSet.as_view()),
-    # path('files/<file_id>/', FileEditDeleteView.as_view()),
-    # path('', include(router.urls)),
-    path('files/', FileViewSet.as_view({'get': 'list'})),
-    path('files/<int:pk>/', FileViewSet.as_view({'patch': 'update', 'get': 'retrieve', 'delete': 'destroy'}),
-         name='detail')
-]
+# router = SimpleRouter()
+# router.register(r'files', FilesViewSet, basename='files')
+#
+# urlpatterns = [
+#     # path('files/', FileViewSet.as_view({'get': 'list', 'post': 'create'})),
+#     # path('files/<int:pk>/', FileViewSet.as_view({'patch': 'update', 'get': 'retrieve', 'delete': 'destroy'}),
+#     #      name='detail')
+# ]
+# urlpatterns += router.urls
