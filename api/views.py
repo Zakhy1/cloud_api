@@ -2,18 +2,20 @@ import uuid
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse
+from rest_framework.authtoken.models import Token
 
-from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError, AuthenticationFailed
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status, viewsets
+from rest_framework.views import APIView
 
-from api.models import File, Access
+from api.models import File, Access, User
 from cloud_api.permissions import CustomIsOwner
-from api.serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer
-from users.models import User
-from users.serializers import UserAccessSerializer
+from api.serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer, UserAccessSerializer, \
+    UserSerializerCreate, AuthTokenSerializer
 
 
 class FilesViewSet(viewsets.ModelViewSet):
@@ -112,3 +114,48 @@ class FilesViewSet(viewsets.ModelViewSet):
         files = File.objects.filter(owner=user)
         file_serializer = FileWithAccessSerializer(files, many=True)
         return Response(file_serializer.data,)
+
+
+class RegisterView(APIView):
+    permission_classes = ()
+
+    def post(self, request):
+        serializer = UserSerializerCreate(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            user.set_password(serializer.validated_data['password'])
+            user.save()
+            token = Token.objects.create(user=user)
+            return Response({
+                'success': True,
+                'message': 'Success',
+                'token': token.key
+            })
+        return Response({'succes': False, 'message': serializer.errors}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+
+class GetAuthToken(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+
+    def post(self, request, *args, **kwargs):
+        serializer = AuthTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'success': True,
+                             'message': 'Success',
+                             'token': token.key})
+        raise AuthenticationFailed(code=403, detail='Login failed')
+
+
+class DeleteAuthToken(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        Token.objects.get(user=user).delete()
+        return Response({
+            'success': True,
+            'message': 'logout'
+        })

@@ -40,8 +40,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
     'api.apps.ApiConfig',
-    'users.apps.UsersConfig'
-
 ]
 
 MIDDLEWARE = [
@@ -153,4 +151,4 @@ REST_FRAMEWORK = {
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'api.User'
