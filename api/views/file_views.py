@@ -2,20 +2,17 @@ import uuid
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse
-from rest_framework.authtoken.models import Token
 
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError, AuthenticationFailed
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status, viewsets
-from rest_framework.views import APIView
 
 from api.models import File, Access, User
+from api.serializers.user_serializers import UserAccessSerializer
 from cloud_api.permissions import CustomIsOwner
-from api.serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer, UserAccessSerializer, \
-    UserSerializerCreate, AuthTokenSerializer
+from api.serializers.file_serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer
 
 
 class FilesViewSet(viewsets.ModelViewSet):
@@ -42,7 +39,7 @@ class FilesViewSet(viewsets.ModelViewSet):
                                                 file=file)
             Access.objects.create(user=request.user, file=uploaded_file)
             host = 'http://127.0.0.1:8000'
-            uploaded_files.append({
+            uploaded_files.append({  # TODO serializer
                 'success': True,
                 'message': 'Success',
                 'name': uploaded_file.name,
@@ -53,19 +50,13 @@ class FilesViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=400)
 
     def retrieve(self, request, *args, **kwargs):
-        try:
-            file = File.objects.get(id=kwargs['pk'])
-        except Exception:
-            raise NotFound(detail=None, code=404)
-        if file.owner == request.user:
+        file = get_object_or_404(File, pk=kwargs['pk'])
+        if file.owner == request.user:  # TODO check without
             return FileResponse(open(file.file.path, 'rb'))
         raise PermissionDenied(detail='Forbidden for you', code=403)
 
     def update(self, request, *args, **kwargs):
-        try:
-            file = File.objects.get(id=kwargs['pk'])
-        except Exception:
-            return Response({'message': 'not found'}, status=404)
+        file = get_object_or_404(File, pk=kwargs['pk'])
         file.name = request.data['name']
         file.save()
         if file.owner == request.user:
@@ -76,11 +67,7 @@ class FilesViewSet(viewsets.ModelViewSet):
         raise PermissionDenied(detail='Forbidden for you', code=403)
 
     def destroy(self, request, *args, **kwargs):
-        try:
-            file = File.objects.get(id=kwargs['pk'])
-        except Exception:
-            return Response({'message': 'Not found'}, status=404)
-
+        file = get_object_or_404(File, pk=kwargs['pk'])
         file.delete()
         return Response({
             'success': True,
@@ -113,49 +100,4 @@ class FilesViewSet(viewsets.ModelViewSet):
         user = self.request.user
         files = File.objects.filter(owner=user)
         file_serializer = FileWithAccessSerializer(files, many=True)
-        return Response(file_serializer.data,)
-
-
-class RegisterView(APIView):
-    permission_classes = ()
-
-    def post(self, request):
-        serializer = UserSerializerCreate(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            user.set_password(serializer.validated_data['password'])
-            user.save()
-            token = Token.objects.create(user=user)
-            return Response({
-                'success': True,
-                'message': 'Success',
-                'token': token.key
-            })
-        return Response({'succes': False, 'message': serializer.errors}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-
-class GetAuthToken(APIView):
-    throttle_classes = ()
-    permission_classes = ()
-
-    def post(self, request, *args, **kwargs):
-        serializer = AuthTokenSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data['user']
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'success': True,
-                             'message': 'Success',
-                             'token': token.key})
-        raise AuthenticationFailed(code=403, detail='Login failed')
-
-
-class DeleteAuthToken(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        user = request.user
-        Token.objects.get(user=user).delete()
-        return Response({
-            'success': True,
-            'message': 'logout'
-        })
+        return Response(file_serializer.data, )
