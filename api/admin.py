@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from api.models import File, User, Access
+
+admin.site.register(File)
+admin.site.register(User)
+admin.site.register(Access)

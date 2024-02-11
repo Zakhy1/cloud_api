@@ -19,6 +19,7 @@ class File(models.Model):
 class Access(models.Model):
     file = models.ForeignKey('File', related_name='accesses', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='accesses', on_delete=models.CASCADE)
+    author = models.BooleanField(default=False)
 
 
 class User(AbstractUser):

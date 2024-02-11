@@ -1,18 +1,17 @@
 import uuid
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse
 
-from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError, AuthenticationFailed
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status, viewsets
 
-from api.models import File, Access, User
-from api.serializers.user_serializers import UserAccessSerializer
+from api.models import File, User, Access
 from cloud_api.permissions import CustomIsOwner
-from api.serializers.file_serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer
+from api.serializers.file_serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer, \
+    AccessSerializer
 
 
 class FilesViewSet(viewsets.ModelViewSet):
@@ -37,7 +36,7 @@ class FilesViewSet(viewsets.ModelViewSet):
             uploaded_file = File.objects.create(name=file.name, file_id=uuid.uuid4(),
                                                 owner=request.user,
                                                 file=file)
-            Access.objects.create(user=request.user, file=uploaded_file)
+            Access.objects.create(user=request.user, file=uploaded_file, author=True)
             host = 'http://127.0.0.1:8000'
             uploaded_files.append({  # TODO serializer
                 'success': True,
@@ -74,19 +73,28 @@ class FilesViewSet(viewsets.ModelViewSet):
             'message': 'File already deleted',
         })
 
-    @action(methods=('post',), detail=True, url_path='accesses')
-    def give_access(self, request, *args, **kwargs):
-        file = get_object_or_404(File, pk=kwargs['pk'])
+    @action(methods=('post', 'delete'), detail=True, url_path='accesses')
+    def manage_access(self, request, *args, **kwargs):
+
         try:
             user = User.objects.get(email=request.data['email'])
             user.co_author = True
-        except ObjectDoesNotExist:
+        except User.DoesNotExist:
             raise ValidationError(detail={'message': 'Enter the correct user email'}, code=422)
-        if request.user != file.owner:
-            raise PermissionDenied(detail='Forbidden for you', code=403)
-        Access.objects.get_or_create(user=user, file=file)
-        serializer = UserAccessSerializer((user, self.request.user), many=True)
-        return Response(serializer.data)
+        if request.method == 'POST':
+            file = get_object_or_404(File, pk=kwargs['pk'])
+            if request.user != file.owner:
+                raise PermissionDenied(detail='Forbidden for you', code=403)
+            Access.objects.get_or_create(user=user, file=file)
+            serializer = AccessSerializer(file.accesses, many=True)
+            return Response(serializer.data)
+
+        if request.method == 'DELETE':
+            access = Access.objects.get(user__email=user.email)
+            file = access.file
+            serializer = AccessSerializer(file.accesses, many=True)
+            access.delete()
+            return Response(serializer.data)
 
     @action(methods=('get',), detail=False, url_path='shared')
     def get_shared_files(self, request, *args, **kwargs):
