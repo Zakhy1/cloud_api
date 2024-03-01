@@ -8,3 +8,9 @@ def response_error(message, response_status=status.HTTP_400_BAD_REQUEST):
 
 def response_success(message, response_status=status.HTTP_200_OK):
     return Response({'success': True, 'message': message}, status=response_status)
+
+
+def response_token(token, response_status=status.HTTP_200_OK):
+    return Response({'success': True,
+                     'message': 'Success',
+                     'token': token.key})
