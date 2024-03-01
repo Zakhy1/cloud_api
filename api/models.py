@@ -10,9 +10,9 @@ from cloud_api.generics.managers import UserManager
 
 
 class File(models.Model):
+    file_id = models.UUIDField(unique=True, default=uuid.uuid4(), primary_key=True)
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to='files')
-    file_id = models.UUIDField(unique=True, default=uuid.uuid4())
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 

@@ -104,13 +104,13 @@ AUTH_PASSWORD_VALIDATORS = [
         }
     },
     {
-        'NAME': 'cloud_api.password_validators.UpperCaseLetterContainValidator',
+        'NAME': 'cloud_api.generics.password_validators.UpperCaseLetterContainValidator',
     },
     {
-        'NAME': 'cloud_api.password_validators.LowerCaseLetterContainValidator',
+        'NAME': 'cloud_api.generics.password_validators.LowerCaseLetterContainValidator',
     },
     {
-        'NAME': 'cloud_api.password_validators.NumberContainValidator',
+        'NAME': 'cloud_api.generics.password_validators.NumberContainValidator',
     },
 
     # {
