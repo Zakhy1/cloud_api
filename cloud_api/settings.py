@@ -153,8 +153,8 @@ REST_FRAMEWORK = {
         # 'cloud_api.permissions.CustomIsOwner',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         'cloud_api.authentication.CustomTokenAuthentication',
     ],
     'EXCEPTION_HANDLER': 'cloud_api.handlers.custom_exception_handler',
