@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from api.serializers.user_serializers import UserSerializerCreate, AuthTokenSerializer
+from cloud_api.exceptions import LoginFailed
 
 
 class RegisterView(APIView):
@@ -38,7 +39,7 @@ class GetAuthToken(APIView):
             return Response({'success': True,
                              'message': 'Success',
                              'token': token.key})
-        raise AuthenticationFailed(code=403, detail='Login failed')
+        raise LoginFailed()
 
 
 class DeleteAuthToken(APIView):
