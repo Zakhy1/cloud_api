@@ -155,9 +155,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-        'cloud_api.authentication.CustomTokenAuthentication',
+        'cloud_api.generics.authentication.CustomTokenAuthentication',
     ],
-    'EXCEPTION_HANDLER': 'cloud_api.handlers.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'cloud_api.generics.handlers.custom_exception_handler',
     # 'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 }
 

@@ -1,12 +1,10 @@
 from rest_framework.authtoken.models import Token
 
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from api.serializers.user_serializers import UserSerializerCreate, AuthTokenSerializer
-from cloud_api.exceptions import LoginFailed
 
 
 class RegisterView(APIView):
@@ -39,7 +37,7 @@ class GetAuthToken(APIView):
             return Response({'success': True,
                              'message': 'Success',
                              'token': token.key})
-        raise LoginFailed()
+        return Response({'success': False, 'message': serializer.errors}, status=status.HTTP_403_FORBIDDEN)
 
 
 class DeleteAuthToken(APIView):

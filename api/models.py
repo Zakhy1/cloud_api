@@ -6,7 +6,7 @@ from django.db import models
 from cloud_api import settings
 from django.utils.translation import gettext_lazy as _
 
-from cloud_api.managers import UserManager
+from cloud_api.generics.managers import UserManager
 
 
 class File(models.Model):

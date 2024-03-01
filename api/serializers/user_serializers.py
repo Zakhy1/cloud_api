@@ -4,6 +4,8 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
+from cloud_api.generics.exceptions import LoginFailed
+
 
 class UserSerializerCreate(serializers.ModelSerializer):
     class Meta:
@@ -47,10 +49,6 @@ class AuthTokenSerializer(serializers.Serializer):
         trim_whitespace=False,
         write_only=True
     )
-    token = serializers.CharField(
-        label=_("Token"),
-        read_only=True
-    )
 
     def validate(self, attrs):
         email = attrs.get('email')
@@ -60,11 +58,6 @@ class AuthTokenSerializer(serializers.Serializer):
             user = authenticate(request=self.context.get('request'),
                                 email=email, password=password)
             if not user:
-                msg = _('Unable to log in with provided credentials.')
-                raise serializers.ValidationError(msg, code='authorization')
-        else:
-            msg = _('Must include "email" and "password".')
-            raise serializers.ValidationError(msg, code='authorization')
+                raise LoginFailed()
 
-        attrs['user'] = user
         return attrs

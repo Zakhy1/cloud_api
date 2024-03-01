@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework import status, viewsets
 
 from api.models import File, User, Access
-from cloud_api.permissions import CustomIsOwner
+from cloud_api.generics.permissions import CustomIsOwner
 from api.serializers.file_serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer, \
     AccessSerializer
 
