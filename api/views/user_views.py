@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from api.serializers.user_serializers import UserSerializerCreate, AuthTokenSerializer
+from cloud_api.generics.common import response_error, response_success
 
 
 class RegisterView(APIView):
@@ -22,11 +23,10 @@ class RegisterView(APIView):
                 'message': 'Success',
                 'token': token.key
             })
-        return Response({'succes': False, 'message': serializer.errors}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        return response_error(serializer.errors, status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 class GetAuthToken(APIView):
-    throttle_classes = ()
     permission_classes = ()
 
     def post(self, request, *args, **kwargs):
@@ -37,7 +37,7 @@ class GetAuthToken(APIView):
             return Response({'success': True,
                              'message': 'Success',
                              'token': token.key})
-        return Response({'success': False, 'message': serializer.errors}, status=status.HTTP_403_FORBIDDEN)
+        return response_error(serializer.errors, status.HTTP_403_FORBIDDEN)
 
 
 class DeleteAuthToken(APIView):
@@ -46,7 +46,4 @@ class DeleteAuthToken(APIView):
     def get(self, request):
         user = self.request.user
         Token.objects.get(user=user).delete()
-        return Response({
-            'success': True,
-            'message': 'logout'
-        })
+        return response_success('Logout')

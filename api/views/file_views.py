@@ -9,6 +9,7 @@ from rest_framework.decorators import action
 from rest_framework import status, viewsets
 
 from api.models import File, User, Access
+from cloud_api.generics.common import response_error
 from cloud_api.generics.permissions import CustomIsOwner
 from api.serializers.file_serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer, \
     AccessSerializer
@@ -46,7 +47,7 @@ class FilesViewSet(viewsets.ModelViewSet):
                 'file_id': uploaded_file.file_id
             })
             return Response(uploaded_files, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=400)
+        return response_error(serializer.errors)
 
     def retrieve(self, request, *args, **kwargs):
         file = get_object_or_404(File, pk=kwargs['pk'])
