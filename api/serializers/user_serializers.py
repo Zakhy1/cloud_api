@@ -59,5 +59,6 @@ class AuthTokenSerializer(serializers.Serializer):
                                 email=email, password=password)
             if not user:
                 raise LoginFailed()
+            attrs['user'] = user
 
         return attrs
