@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from api.models import File, User, Access
+from api.models import Access, File, User
 
 admin.site.register(File)
 admin.site.register(User)

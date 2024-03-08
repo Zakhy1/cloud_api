@@ -1,18 +1,21 @@
 import uuid
 
 from django.http import FileResponse
-
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework import status, viewsets
 
-from api.models import File, User, Access
+from api.models import Access, File, User
+from api.serializers.file_serializers import (
+    AccessSerializer,
+    FileSerializer,
+    FileWithAccessSerializer,
+    UploadedFileSerializer,
+)
 from cloud_api.generics.common import response_error, response_success
 from cloud_api.generics.permissions import CustomIsOwner
-from api.serializers.file_serializers import FileSerializer, UploadedFileSerializer, FileWithAccessSerializer, \
-    AccessSerializer
 
 
 class FilesViewSet(viewsets.ModelViewSet):

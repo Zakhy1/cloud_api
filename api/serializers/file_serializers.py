@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from api.models import File, Access
+
+from api.models import Access, File
 
 
 class FileSerializer(serializers.Serializer):

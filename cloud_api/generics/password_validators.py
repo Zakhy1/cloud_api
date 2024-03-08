@@ -35,7 +35,7 @@ class NumberContainValidator:
         self.count = count
 
     def validate(self, password, user=None):
-        if len(re.findall('\d', password)) < self.count:
+        if len(re.findall(r'\d', password)) < self.count:
             raise ValidationError(
                 _(f'The password must contain at least {self.count} numbers, 0-9'), code='password_no_number')
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from rest_framework.routers import SimpleRouter
 
 from api.views.file_views import FilesViewSet

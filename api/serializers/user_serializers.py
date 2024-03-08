@@ -1,9 +1,9 @@
 from django.contrib.auth import authenticate
-from api.models import User
 from django.contrib.auth.password_validation import validate_password
-from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 
+from api.models import User
 from cloud_api.generics.exceptions import LoginFailed
 
 
@@ -40,11 +40,11 @@ class UserAccessSerializer(serializers.ModelSerializer):
 
 class AuthTokenSerializer(serializers.Serializer):
     email = serializers.CharField(
-        label=_("Email"),
+        label=_('Email'),
         write_only=True
     )
     password = serializers.CharField(
-        label=_("Password"),
+        label=_('Password'),
         style={'input_type': 'password'},
         trim_whitespace=False,
         write_only=True

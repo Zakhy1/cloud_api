@@ -1,8 +1,8 @@
+from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
-from rest_framework import status, viewsets
 
-from api.serializers.user_serializers import UserSerializerCreate, AuthTokenSerializer
+from api.serializers.user_serializers import AuthTokenSerializer, UserSerializerCreate
 from cloud_api.generics.common import response_error, response_success, response_token
 
 
