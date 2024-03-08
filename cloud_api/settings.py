@@ -11,12 +11,16 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv_path = BASE_DIR / '.env'
+load_dotenv(dotenv_path)
+
 SECRET_KEY = 'django-insecure-a@oj$$j4bocr)ks%+2e%imr^21a4)!c*q6l*gnjrpxyvjtq8pz'
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'zakhy15.pythonanywhere.com']
 
@@ -70,31 +74,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'cloud_api.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-# DATABASES = { dev
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'cloud-prj',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': '127.0.0.1',
-#         'PORT': '3306',
-#         # 'OPTIONS': {
-#         #     "init_command': 'SET sql_mode='STRICT_TRANS_TABLES'"
-#         # }
-#     }
-# }
 
 # docker
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cloud-api',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'db',
-        'PORT': '3306',
+        'NAME': os.getenv('MYSQL_DB'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'HOST': os.getenv('MYSQL_HOST'),
+        'PORT': os.getenv('MYSQL_PORT'),
     }
 }
 

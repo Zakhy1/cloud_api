@@ -14,8 +14,8 @@ class UploadedFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = File
-        fields = ('id', 'name', 'url', 'file_id')
-        read_only_fields = ('id', 'name', 'url', 'file_id')
+        fields = ('file_id', 'name', 'url', 'file_id')
+        read_only_fields = ('file_id', 'name', 'url', 'file_id')
 
     def get_url(self, obj):
         host = 'http://127.0.0.1:8000'
@@ -47,5 +47,5 @@ class FileWithAccessSerializer(UploadedFileSerializer):
 
     class Meta:
         model = File
-        fields = ('id', 'name', 'url', 'file_id', 'accesses')
-        read_only_fields = ('id', 'name', 'url', 'file_id', 'accesses')
+        fields = ('file_id', 'name', 'url', 'file_id', 'accesses')
+        read_only_fields = ('file_id', 'name', 'url', 'file_id', 'accesses')
