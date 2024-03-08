@@ -12,16 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-a@oj$$j4bocr)ks%+2e%imr^21a4)!c*q6l*gnjrpxyvjtq8pz'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'zakhy15.pythonanywhere.com']
@@ -102,9 +96,6 @@ DATABASES = {
         'PASSWORD': 'root',
         'HOST': 'db',
         'PORT': '3306',
-        # 'OPTIONS': {
-        #     "init_command': 'SET sql_mode='STRICT_TRANS_TABLES'"
-        # }
     }
 }
 
@@ -168,15 +159,11 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-        # 'cloud_api.permissions.CustomIsOwner',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
         'cloud_api.generics.authentication.CustomTokenAuthentication',
     ],
     'EXCEPTION_HANDLER': 'cloud_api.generics.handlers.custom_exception_handler',
-    # 'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 }
 
 MEDIA_URL = 'media/'
