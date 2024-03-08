@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-a@oj$$j4bocr)ks%+2e%imr^21a4)!c*q6l*gnjrpxyvjtq8pz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'zakhy15.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'zakhy15.pythonanywhere.com']
 
 # Application definition
 
@@ -39,12 +39,15 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
+    'corsheaders',
+
     'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,13 +79,28 @@ WSGI_APPLICATION = 'cloud_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = { dev
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'cloud-prj',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#         # 'OPTIONS': {
+#         #     "init_command': 'SET sql_mode='STRICT_TRANS_TABLES'"
+#         # }
+#     }
+# }
+
+# docker
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cloud-prj',
+        'NAME': 'cloud-api',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'root',
+        'HOST': 'db',
         'PORT': '3306',
         # 'OPTIONS': {
         #     "init_command': 'SET sql_mode='STRICT_TRANS_TABLES'"
@@ -165,3 +183,11 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'api.User'
+
+# CORS
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000',
+    'http://localhost:8080',
+    'http://127.0.0.1:8000',
+]
