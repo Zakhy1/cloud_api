@@ -4,16 +4,22 @@
 В данном приложении использованы:
 
 * #### Python-фреймворки:
-    * Django 5.0.1
-* #### Pre-commit хуки:
-    * isort
-    * pyupgrade
-    * autopep8
-    * flake8
+    * Django 5.0
+    * Django REST framework
+* #### Вспомогательные библиотеки
+    * pre-commit
+        * isort
+        * pyupgrade
+        * autopep8
+        * flake8
+    * django-cors-headers
+    * python-dotenv
 * #### Базы данных:
     * MySQL
 * #### Контейнеризация и оркестрация
     * Docker
+
 ### Запуск приложения
+
 1. При клонировании репозитория будет необходимо создать свой файл .env согласно примеру example.env
 2. `docker compose up`
